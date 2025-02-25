@@ -19,6 +19,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -90,8 +91,11 @@ public class MVPlayerListener implements Listener {
         }
 
         // If it's null then it either means the World doesn't exist or the value is blank, so we don't handle it.
-        // NOW: We'll always handle it to get more accurate spawns
-        if (respawnWorld != null) {
+        // If it's not null, and it's normal environment, we'll handle it to get more accurate spawns
+        if (respawnWorld == null && world.getEnvironment() != World.Environment.NORMAL) {
+            // keep default event handle if it's nether respan or exits the end through the end portal
+            return;
+        } else if (respawnWorld != null) {
             world = respawnWorld.getCBWorld();
         }
         // World has been set to the appropriate world
